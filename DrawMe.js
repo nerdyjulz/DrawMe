@@ -8,6 +8,7 @@ const resetButton = document.createElement ('button');
 var satCounter = 0;
 var userrows = 5;
 var usercols = 5;
+var mousetracker = 0;
 
 function welcome() {
     welcomeDiv.className = "welcome";
@@ -59,41 +60,52 @@ function createGrid(gridrow, gridcol) {
 function hover() {
     const pixels = document.querySelectorAll('.pixel');
     pixels.forEach((div) => {
-        div.addEventListener("mouseover", (event) => {
-            let tempString = "";
-            var randHue = Math.random() * 360;
-            //get current background color from div
-            let tempBG = div.getAttribute("style","background-color");
-            console.log(tempBG);
-            // if first time mouseover - generate new random colour
-            if (tempBG === null){
-                div.setAttribute("style", "background-color: hsl(" + randHue + ",10% ,60%);");
-                let satCounter = 10;
-            /* Step 4: Instead of just changing the color of a square from black to white (for example), have each pass through with the mouse change it to a completely random RGB value. Then try having each pass just add another 10% of black to it so that only after 10 passes is the square completely black. */
-            } else {
-                //isolate background color properties
-                bgArray = tempBG.split(",");
-                console.log(bgArray[0]);
-                console.log(bgArray[1]);
-                console.log(bgArray[2]);
-                //get hue value and increment
-                tempString = bgArray[1];
-                tempString = tempString.substring(0,tempString.length-2);
-                satCounter = +tempString;
-                if (satCounter === 100) { 
-                    satCounter = 100;
-                } else {
-                    satCounter += 10;
-                }
-                //assign new hue value to div
-                bgArray[1] = satCounter + "% ";
-                tempBG = bgArray[0] +","+ bgArray[1] +","+ bgArray[2];
-                div.setAttribute("style",tempBG);
-            }
-            console.log("TempBG: "+ tempBG);
-
+        div.addEventListener("mousedown", (event) => {
+            mousetracker = 1;
+            console.log("mousetracker:" + mousetracker);
         });
-    })
+        div.addEventListener("mouseup", (event) => {
+            mousetracker = 0;
+            console.log("mousetracker:" + mousetracker);
+        });
+        /*while(mousetracker === 1){ */
+            div.addEventListener("mouseenter", (event) => {
+                if (mousetracker ===1){
+                    let tempString = "";
+                    var randHue = Math.random() * 360;
+                    //get current background color from div
+                    let tempBG = div.getAttribute("style","background-color");
+                    console.log(tempBG);
+                    // if first time mouseover - generate new random colour
+                    if (tempBG === null){
+                        div.setAttribute("style", "background-color: hsl(" + randHue + ",10% ,60%);");
+                        let satCounter = 10;
+                    /* Step 4: Instead of just changing the color of a square from black to white (for example), have each pass through with the mouse change it to a completely random RGB value. Then try having each pass just add another 10% of black to it so that only after 10 passes is the square completely black. */
+                    } else {
+                        //isolate background color properties
+                        bgArray = tempBG.split(",");
+                        console.log(bgArray[0]);
+                        console.log(bgArray[1]);
+                        console.log(bgArray[2]);
+                        //get hue value and increment
+                        tempString = bgArray[1];
+                        tempString = tempString.substring(0,tempString.length-2);
+                        satCounter = +tempString;
+                        if (satCounter === 100) { 
+                            satCounter = 100;
+                        } else {
+                            satCounter += 10;
+                        }
+                        //assign new hue value to div
+                        bgArray[1] = satCounter + "% ";
+                        tempBG = bgArray[0] +","+ bgArray[1] +","+ bgArray[2];
+                        div.setAttribute("style",tempBG);
+                    }
+                    console.log("TempBG: "+ tempBG);
+                }
+            });
+        //}
+    });
 }
 
 //reset grid size by removing all child nodes
